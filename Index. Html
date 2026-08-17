@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programme.tn</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f6f8;
+      color: #111;
+    }
+
+    header {
+      height: 65px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: #555;
+    }
+
+    .search {
+      background: #f0f1f3;
+      border: none;
+      border-radius: 22px;
+      padding: 10px 16px;
+      width: 230px;
+      outline: none;
+    }
+
+    .profile-btn {
+      border: none;
+      background: #111;
+      color: white;
+      padding: 9px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    main {
+      max-width: 850px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .stories {
+      background: white;
+      padding: 15px;
+      border-radius: 16px;
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      margin-bottom: 18px;
+    }
+
+    .story {
+      min-width: 72px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .story-img {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #111, #777);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin: auto;
+      border: 3px solid white;
+      outline: 2px solid #111;
+    }
+
+    .story p {
+      font-size: 12px;
+      margin-top: 7px;
+    }
+
+    .create {
+      background: white;
+      padding: 16px;
+      border-radius: 16px;
+      margin-bottom: 18px;
+    }
+
+    .create textarea {
+      width: 100%;
+      border: none;
+      background: #f1f2f4;
+      border-radius: 12px;
+      padding: 13px;
+      resize: none;
+      outline: none;
+      min-height: 75px;
+    }
+
+    .create-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .upload {
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .post-btn {
+      background: #111;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 18px;
+      cursor: pointer;
+    }
+
+    .post {
+      background: white;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #222;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .post-name {
+      font-weight: bold;
+    }
+
+    .post-time {
+      color: #888;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .post-text {
+      padding: 0 15px 15px;
+      line-height: 1.5;
+    }
+
+    .post-image {
+      width: 100%;
+      height: 360px;
+      background: linear-gradient(135deg, #222, #888);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .actions {
+      display: flex;
+      gap: 25px;
+      padding: 14px 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .actions button {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 65px;
+      background: white;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: center;
+      gap: 55px;
+      align-items: center;
+      z-index: 20;
+    }
+
+    nav button {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    nav button.active {
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .search {
+        width: 130px;
+      }
+
+      .post-image {
+        height: 280px;
+      }
+
+      nav {
+        gap: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Programme<span>.tn</span></div>
+
+  <input
+    class="search"
+    type="text"
+    placeholder="Rechercher..."
+    oninput="searchPosts(this.value)"
+  >
+
+  <button class="profile-btn" onclick="showProfile()">
+    Profil
+  </button>
+</header>
+
+<main>
+
+  <section class="stories">
+
+    <div class="story" onclick="addStory()">
+      <div class="story-img">+</div>
+      <p>Votre story</p>
+    </div>
+
+    <div class="story">
+      <div class="story-img">A</div>
+      <p>Ahmed</p>
+    </div>
+
+    <div class="story">
+      <div class="story-img">S</div>
+      <p>Sarra</p>
+    </div>
+
+    <div class="story">
+      <div class="story-img">M</div>
+      <p>Mohamed</p>
+    </div>
+
+    <div class="story">
+      <div class="story-img">L</div>
+      <p>Louay</p>
+    </div>
+
+  </section>
+
+  <section class="create">
+
+    <textarea
+      id="postText"
+      placeholder="Qu'est-ce que vous voulez partager ?"
+    ></textarea>
+
+    <div class="create-bottom">
+
+      <label class="upload">
+        📷 Photo / 🎬 Reel
+        <input type="file" hidden accept="image/*,video/*">
+      </label>
+
+      <button class="post-btn" onclick="publishPost()">
+        Publier
+      </button>
+
+    </div>
+
+  </section>
+
+  <section id="feed">
+
+    <article class="post">
+
+      <div class="post-header">
+        <div class="avatar">P</div>
+
+        <div>
+          <div class="post-name">Programme.tn</div>
+          <div class="post-time">Maintenant</div>
+        </div>
+      </div>
+
+      <div class="post-text">
+        Bienvenue sur Programme.tn 👋
+        <br>
+        Partage tes photos, stories et reels.
+      </div>
+
+      <div class="post-image">
+        PROGRAMME.TN
+      </div>
+
+      <div class="actions">
+        <button onclick="like(this)">♡ J'aime</button>
+        <button onclick="comment()">💬 Commenter</button>
+        <button onclick="share()">↗ Partager</button>
+      </div>
+
+    </article>
+
+  </section>
+
+</main>
+
+<nav>
+  <button class="active" onclick="goHome()">⌂ Accueil</button>
+  <button onclick="showReels()">▶ Reels</button>
+  <button onclick="addStory()">＋ Créer</button>
+  <button onclick="showProfile()">◎ Profil</button>
+</nav>
+
+<script>
+
+  function like(button) {
+    if (button.innerText.includes("♡")) {
+      button.innerText = "♥ J'aime";
+    } else {
+      button.innerText = "♡ J'aime";
+    }
+  }
+
+  function comment() {
+    alert("Les commentaires seront disponibles dans la prochaine version.");
+  }
+
+  function share() {
+    alert("Fonction partage — bientôt disponible.");
+  }
+
+  function addStory() {
+    alert("Création de Story — bientôt disponible.");
+  }
+
+  function showProfile() {
+    alert("Profil — bientôt disponible.");
+  }
+
+  function showReels() {
+    alert("Reels — bientôt disponible.");
+  }
+
+  function goHome() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  function publishPost() {
+
+    const text = document.getElementById("postText").value.trim();
+
+    if (text === "") {
+      alert("Écris quelque chose avant de publier.");
+      return;
+    }
+
+    const post = document.createElement("article");
+    post.className = "post";
+
+    post.innerHTML = `
+      <div class="post-header">
+        <div class="avatar">U</div>
+
+        <div>
+          <div class="post-name">Utilisateur</div>
+          <div class="post-time">À l'instant</div>
+        </div>
+      </div>
+
+      <div class="post-text">
+        ${text}
+      </div>
+
+      <div class="actions">
+        <button onclick="like(this)">♡ J'aime</button>
+        <button onclick="comment()">💬 Commenter</button>
+        <button onclick="share()">↗ Partager</button>
+      </div>
+    `;
+
+    document.getElementById("feed").prepend(post);
+
+    document.getElementById("postText").value = "";
+  }
+
+  function searchPosts(value) {
+    console.log("Recherche :", value);
+  }
+
+</script>
+
+</body>
+</html>
